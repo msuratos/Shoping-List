@@ -1,0 +1,31 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Houses the backend logic for the shopping list application",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "debug": "nodemon --nolazy src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://dev.azure.com/Syzmic/Shopping%20List/_git/Backend"
+  },
+  "author": "Melvin Suratos",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^3.23.3",
+    "jsonwebtoken": "^8.5.1",
+    "monk": "^7.3.1",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
