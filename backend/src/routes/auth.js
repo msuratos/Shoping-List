@@ -60,6 +60,12 @@ router.post('/signin', (req, res) => {
 
 	// Check password hash from db
 	db.get('users').findOne({ username: username }).then((user) => {
+		if (user === null || user === undefined) {
+			res.statusMessage = 'Invalid user';
+			res.status(500);
+			return res.end();
+		}
+
 		bcrypt.compare(password, user.passwordhash, function(err, result) {
 			if (result) {
 				// Create a new token with the username in the payload
@@ -80,6 +86,12 @@ router.post('/signin', (req, res) => {
 				res.status(403);
 			}
 		});
+	}).catch((error) => {
+		console.log('Error has occurred in password hash match', error);
+		res.statusMessage = 'Incorrect password hash match';
+		res.status(500);
+
+		return res.end();
 	});
 });
 
