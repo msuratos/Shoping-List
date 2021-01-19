@@ -8,7 +8,11 @@ import logoshopping from '../../logo-shopping-list.svg';
 import './Login.css'; 
 
 class Login extends React.Component {
-    state = { username: '', password: '', errors: {}, redirect: null };    
+    state = { username: '', password: '', errors: {}, redirect: null };
+
+    componentDidMount() {
+        document.getElementById('username').focus();
+    }
 
     render() {
         let usernameerror;
