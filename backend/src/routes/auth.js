@@ -40,6 +40,7 @@ router.post('/register', (req, res) => {
 				passwordhash: hash
 			}).then((user) => {
 				console.log(`New users has been inserted to mongo database: ${user.username}`);
+				return res.sendStatus(200);
 			}).catch(err => {
 				console.log(err);				
 				res.statusMessage = 'Could not save to database.';
