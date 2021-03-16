@@ -1,0 +1,14 @@
+{
+    "name": "Shopping List",
+    "description": "This app is to create a better experience when managing your shopping list",
+    "keywords": [
+      "nodejs",
+      "react"
+    ],
+    "repository": "https://github.com/msuratos/shopping-list",
+    "buildpacks": [
+      {
+        "url": "heroku/nodejs"
+      }
+    ]
+  }
