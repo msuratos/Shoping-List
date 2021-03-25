@@ -1,8 +1,5 @@
 {
     "name": "Shopping List",
-    "env": {
-        "PROJECT_PATH": "backend"
-    },
     "buildpacks": [
       {
         "url": "https://github.com/timanovsky/subdir-heroku-buildpack.git"        
