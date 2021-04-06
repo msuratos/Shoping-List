@@ -20,6 +20,8 @@ router.route('/')
             let db_category = await items.findOneAndUpdate(
                 { categoryid: categoryid, userid: userid },
                 { $push: { items: item }});
+
+            return res.json(db_category);
         }
         catch (exception) {
             console.log(exception);
@@ -28,8 +30,6 @@ router.route('/')
 
             return res.end();
         }
-
-        return res.sendStatus(200);
     });
 
 module.exports = router;
