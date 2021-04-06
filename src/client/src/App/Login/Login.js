@@ -88,19 +88,20 @@ class Login extends React.Component {
                     'Content-Type': 'application/json'
                 }
             };
-
-            await fetch(url, urlParams)
-                .then(res => {
-                    if (!res.ok) {
-                        console.log(`${res.status} ${res.statusText}: Network response was not ok`);
-                        this.props.isauthenticated(false);
-                    } else {
-                        console.log(res, 'You are now logged in!');
-                        this.props.isauthenticated(true);
-                        this.setState({ redirect: "/" });
-                    }
-                })
-                .catch(err => console.log('Error with fetch', err));
+            
+            try {
+                const res = await fetch(url, urlParams)
+                
+                if (!res.ok) {
+                    console.log(`${res.status} ${res.statusText}: Network response was not ok`);
+                    this.props.isauthenticated(false);
+                } else {
+                    this.props.isauthenticated(true);
+                    this.setState({ redirect: "/" });
+                }
+            } catch (err) {
+                console.log('Error with fetch', err)
+            }
         } else {
             console.log('Invalid validation from user input');
         }
