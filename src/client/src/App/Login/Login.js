@@ -6,12 +6,43 @@ import { isauthenticated } from "../../redux/slices/authslice";
 import logoshopping from '../../logo-shopping-list.svg';
 
 import './Login.css'; 
+  
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) 
+        {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+  
+function checkCookie(cookiename) {
+    var token = getCookie(cookiename);
+    if (token !== "")
+        return true;
+    else
+        return false;
+}
 
 class Login extends React.Component {
     state = { username: '', password: '', errors: {}, redirect: null };
 
     componentDidMount() {
         document.getElementById('username').focus();
+        
+        if (checkCookie('token')) {
+            this.props.isauthenticated(true);
+            this.setState({ redirect: "/" });
+        } else {
+            console.log('not authenticated');
+        }
     }
 
     render() {
@@ -80,6 +111,7 @@ class Login extends React.Component {
             const url = process.env.REACT_APP_BACKEND_URL + 'api/v1/auth/signin';
             const urlParams = {
                 method: 'POST',
+                credentials: 'include',
                 body: JSON.stringify({
                     username: this.state.username,
                     password: this.state.password
@@ -117,7 +149,7 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = (state, userprops) => {
-    return { token: state.auth }
+    return { auth: state.auth }
 }
 
 export default connect(mapStateToProps, { isauthenticated })(Login);
