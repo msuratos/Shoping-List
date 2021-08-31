@@ -111,7 +111,6 @@ class Login extends React.Component {
             const url = process.env.REACT_APP_BACKEND_URL + 'api/v1/auth/signin';
             const urlParams = {
                 method: 'POST',
-                credentials: 'include',
                 body: JSON.stringify({
                     username: this.state.username,
                     password: this.state.password
