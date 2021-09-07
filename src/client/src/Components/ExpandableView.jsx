@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import './expandableview.css';
+import { Button } from "@material-ui/core";
+
+import './ExpandableView.css';
 
 const ExpandableView = () => {
     const [items, setItems] = useState([]);
     
     useEffect(() => {
         const getItemsForUser = async () => {
-            const url = process.env.REACT_APP_BACKEND_URL + 'api/v1/item?userid=user2';
-            const resp = await fetch(url);
+            const resp = await fetch('api/v1/item?userid=user2');
             
             if (resp.ok) {
                 const data = await resp.json();
-                console.log(data);
+                setItems(data);
             }
         };
 
@@ -20,11 +21,11 @@ const ExpandableView = () => {
 
     return (
         <>
-            <input type="button" value="Add Category" />
-            <input type="button" value="Add Item" />
+            <Button variant="contained">Add Category</Button>
+            <Button variant="contained">Add Item</Button>
             <ul>
                 {
-                    items.map((val) => <li>{val}</li>)
+                    items.map((item) => <li key={item._id}>{item.item}</li>)
                 }
             </ul>
         </>

@@ -10,7 +10,7 @@ router.route('/')
 
         db.get('items').find({ userid: userid }).then((items) => {
             res.json(items);
-        })
+        });
     })
     .post(async (req, res) => {
         const { userid, categoryid, item } = req.body;
