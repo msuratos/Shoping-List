@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
 import { isauthenticated } from "../redux/slices/authslice";
+import { register } from '../Apis/AuthApi';
 import './Login.css'
 
 const Register = (props) => {
@@ -42,29 +43,20 @@ const Register = (props) => {
 
     const onRegisterClick = async (events) => {
         if (handleValidation()) {
-            const urlParams = {
-                method: 'POST',
-                body: JSON.stringify({
-                    username: username,
-                    password: password
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
+            try {
+                const res = await register(username, password);
+                if (!res.ok) {
+                    console.log(`${res.status} ${res.statusText}: Network response was not ok`);
+                    props.isauthenticated(false);
+                } else {
+                    console.log(res, 'You are now logged in!');
+                    props.isauthenticated(true);
+                    setRedirect('/');
                 }
-            };
-
-            await fetch('api/v1/auth/register', urlParams)
-                .then(res => {
-                    if (!res.ok) {
-                        console.log(`${res.status} ${res.statusText}: Network response was not ok`);
-                        props.isauthenticated(false);
-                    } else {
-                        console.log(res, 'You are now logged in!');
-                        props.isauthenticated(true);
-                        setRedirect('/');
-                    }
-                })
-                .catch(err => console.log('Error with fetch', err));
+            }
+            catch (err) {
+                console.log('Error with fetch', err);
+            }
         } 
         else
             console.log('Invalid validation from user input');

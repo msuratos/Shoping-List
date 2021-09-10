@@ -5,6 +5,7 @@ import { Link, Redirect } from "react-router-dom";
 import { isauthenticated } from "../redux/slices/authslice";
 import logoshopping from '../logo-shopping-list.svg';
 
+import { signin } from '../Apis/AuthApi';
 import './Login.css';
   
 function getCookie(cname) {
@@ -57,19 +58,10 @@ const Login = (props) => {
 
     const onLoginButtonClick = async (events) => {
         if (handleValidation()) {
-            const urlParams = {
-                method: 'POST',
-                body: JSON.stringify({
-                    username: username,
-                    password: password
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            };
+            
             
             try {
-                const res = await fetch('api/v1/auth/signin', urlParams)
+                const res = await signin(username, password);
                 
                 if (!res.ok) {
                     console.log(`${res.status} ${res.statusText}: Network response was not ok`);
