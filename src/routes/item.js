@@ -17,7 +17,7 @@ router.route('/')
         const items = db.get('items');
 
         try {
-            let db_category = await items.findOneAndUpdate(
+            const db_category = await items.findOneAndUpdate(
                 { categoryid: categoryid, userid: userid },
                 { $push: { items: item }});
 
