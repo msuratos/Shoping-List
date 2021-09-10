@@ -6,11 +6,11 @@ const router = express.Router();
 
 router.route('/')
     .get((req, res) => {
-        const { userid } = req.body;
+        const { userid } = req.query;
 
         db.get('items').find({ userid: userid }).then((items) => {
             res.json(items);
-        })
+        });
     })
     .post(async (req, res) => {
         const { userid, categoryid, item } = req.body;
