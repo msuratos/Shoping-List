@@ -43,7 +43,13 @@ const ItemList = () => {
                 if (!resp.ok) console.log('Error adding category', await resp.json());
                 else {
                     const data = await resp.json();
-                    setItems((state) => [...state, data]); //TODO: fix this logic, seems like it inserts a new record instead of updating
+                    const newItemList = items.map((val, index) => {
+                        if (val.categoryid !== data.categoryid) return val;
+                        val.items = data.items;
+
+                        return val;
+                    });
+                    setItems(newItemList);
                     setItem('');
                     setIsItemValid(true);
                 }
