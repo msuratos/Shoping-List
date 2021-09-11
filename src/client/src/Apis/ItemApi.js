@@ -18,9 +18,9 @@ export const AddCategory = async (category) => {
   return await fetch('/api/v1/category', urlParams);
 };
 
-export const AddItem = async (item) => {
+export const AddItem = async (item, categoryid) => {
   const categoryDto = {
-    categoryid: '8c3b1b1c-1dc1-4864-9ad0-663f1dd5ce87',
+    categoryid: categoryid,
     userid: 'user1',
     item
   };

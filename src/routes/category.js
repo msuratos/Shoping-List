@@ -23,8 +23,7 @@ router.route('/')
         }
         else {
             try {
-                var item = await items.insert({ categoryid: uuidv4(), category: category, userid: userid, items: [] });
-
+                const item = await items.insert({ categoryid: uuidv4(), category: category, userid: userid, items: [] });
                 return res.json(item);
             }
             catch (exception) {
