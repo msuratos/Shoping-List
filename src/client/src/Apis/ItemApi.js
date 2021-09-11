@@ -1,5 +1,5 @@
 export const GetItemsForUser = async () => {
-  return await fetch('api/v1/item?userid=user1');
+  return await fetch('api/v1/item');
 };
 
 export const AddCategory = async (category) => {

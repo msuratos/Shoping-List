@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.route('/')
     .get((req, res) => {
-        const { userid } = req.query;
+        const userid = req.userId; // this came from verify-token.js
 
         db.get('items').find({ userid: userid }).then((items) => {
             res.json(items);
