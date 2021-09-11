@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 
-import { isauthenticated } from "../redux/slices/authslice";
+import { signInThunk } from "../redux/slices/authslice";
 import logoshopping from '../logo-shopping-list.svg';
 
-import { signin } from '../Apis/AuthApi';
 import './Login.css';
   
 function getCookie(cname) {
@@ -38,6 +37,8 @@ const Login = (props) => {
     const [errors, setErrors] = useState({});
     const [redirect, setRedirect] = useState(null);
 
+    const dispatch = useDispatch();
+
     const handleValidation = () => {
         let errors = {};
         let formIsValid = true;
@@ -61,15 +62,9 @@ const Login = (props) => {
             
             
             try {
-                const res = await signin(username, password);
-                
-                if (!res.ok) {
-                    console.log(`${res.status} ${res.statusText}: Network response was not ok`);
-                    props.isauthenticated(false);
-                } else {
-                    props.isauthenticated(true);
-                    setRedirect('/');
-                }
+                const resp = await dispatch(signInThunk({username: username, password: password}));
+                console.log('signed in', resp);
+                setRedirect('/');
             } catch (err) {
                 console.log('Error with fetch', err)
             }
@@ -83,7 +78,6 @@ const Login = (props) => {
 
     useEffect(() => {        
         if (checkCookie('token')) {
-            props.isauthenticated(true);
             setRedirect('/');
         } else {
             console.log('not authenticated');
@@ -124,10 +118,6 @@ const Login = (props) => {
             </div>
         </main>
     );
-}
-
-const mapStateToProps = (state) => {
-    return { auth: state.auth }
 };
 
-export default connect(mapStateToProps, { isauthenticated })(Login);
+export default Login;

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
 
-import { isauthenticated } from "../redux/slices/authslice";
-import { register } from '../Apis/AuthApi';
+import { registerThunk } from '../redux/slices/authslice';
 import './Login.css'
 
 const Register = (props) => {
@@ -12,6 +11,8 @@ const Register = (props) => {
     const [confirmpassword, setConfirmPassword] = useState('');
     const [errors, setErrors] = useState({});
     const [redirect, setRedirect] = useState(null);
+
+    const dispatch = useDispatch();
 
     const handleValidation = () => {
         let errors = {};
@@ -44,15 +45,9 @@ const Register = (props) => {
     const onRegisterClick = async (events) => {
         if (handleValidation()) {
             try {
-                const res = await register(username, password);
-                if (!res.ok) {
-                    console.log(`${res.status} ${res.statusText}: Network response was not ok`);
-                    props.isauthenticated(false);
-                } else {
-                    console.log(res, 'You are now logged in!');
-                    props.isauthenticated(true);
-                    setRedirect('/');
-                }
+                const resp = await dispatch(registerThunk({username: username, password: password}));
+                console.log('Registered', resp);
+                setRedirect('/');
             }
             catch (err) {
                 console.log('Error with fetch', err);
@@ -102,6 +97,4 @@ const Register = (props) => {
     );
 };
 
-const mapStateToProps = (state) => { return { token: state.auth }};
-
-export default connect(mapStateToProps, { isauthenticated })(Register);
+export default Register;
