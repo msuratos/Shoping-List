@@ -1,11 +1,13 @@
-import React, {  } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
 import { Accordion, AccordionSummary, AccordionDetails } from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import './ExpandableView.css';
 
 const ExpandableView = (props) => {
-    const { items, setCurrentCategoryId } = props;
+    const { setCurrentCategoryId } = props;
+    const items = useSelector(state => state.itemlist.items);
 
     return (
         <>

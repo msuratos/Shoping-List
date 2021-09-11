@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Button, Grid, TextField } from "@material-ui/core";
 
-import { AddCategory, AddItem, GetItemsForUser } from "../Apis/ItemApi";
+import { addCategoryThunk, addItemThunk, getItems } from "../redux/slices/itemlistslice";
 import ExpandableView from '../Components/ExpandableView';
 
 const isValidValue = (value) => {
@@ -9,7 +10,6 @@ const isValidValue = (value) => {
 }
 
 const ItemList = () => {
-    const [items, setItems] = useState([]);
     const [currentCategoryId, setCurrentCategoryId] = useState(null);
 
     const [category, setCategory] = useState('');
@@ -18,18 +18,16 @@ const ItemList = () => {
     const [item, setItem] = useState('');
     const [isItemValid, setIsItemValid] = useState(true);
 
+    const dispatch = useDispatch();
+
     const addCategory = async () => {
         if (!isValidValue(category)) 
             setIsCategoryValid(false);
         else {
-            const resp = await AddCategory(category);
-            if (!resp.ok) console.log('Error adding category', await resp.json());
-            else {
-                const data = await resp.json();
-                setItems((state) => [...state, data]);
-                setCategory('');
-                setIsCategoryValid(true);
-            }
+            const resp = await dispatch(addCategoryThunk(category));
+            console.log('Added category', resp);
+            setIsCategoryValid(true);
+            setCategory('');
         }
     };
 
@@ -39,36 +37,22 @@ const ItemList = () => {
         else {
             if (currentCategoryId === null || currentCategoryId === undefined) setIsItemValid(false);
             else {
-                const resp = await AddItem(item, currentCategoryId);
-                if (!resp.ok) console.log('Error adding category', await resp.json());
-                else {
-                    const data = await resp.json();
-                    const newItemList = items.map((val, index) => {
-                        if (val.categoryid !== data.categoryid) return val;
-                        val.items = data.items;
-
-                        return val;
-                    });
-                    setItems(newItemList);
-                    setItem('');
-                    setIsItemValid(true);
-                }
+                const resp = await dispatch(addItemThunk({ item: item, categoryid: currentCategoryId }));
+                console.log('Added item', resp);
+                setIsItemValid(true);
+                setItem('');
             }
         }
     };
     
     useEffect(() => {
-        const getItemsForUser = async () => {
-            const resp = await GetItemsForUser();
-            
-            if (resp.ok) {
-                const data = await resp.json();
-                setItems(data);
-            }
+        const getItemsFromService = async () => {
+            const resp = await dispatch(getItems());
+            console.log('Got items for user', resp);
         };
 
-        getItemsForUser();
-    }, []);
+        getItemsFromService();
+    }, [dispatch]);
 
     return (
         <>
@@ -88,7 +72,7 @@ const ItemList = () => {
                     <Button variant="contained" onClick={addItem} fullWidth>Add Item</Button>
                 </Grid>
             </Grid>
-            <ExpandableView items={items} setCurrentCategoryId={setCurrentCategoryId}></ExpandableView>
+            <ExpandableView setCurrentCategoryId={setCurrentCategoryId}></ExpandableView>
         </>
     );
 }
