@@ -11,6 +11,18 @@ const router = express.Router();
 const jwtKey = process.env.JWT_KEY
 const jwtExpirySeconds = parseInt(process.env.JWT_EXPIRY_SECS, 10);
 
+// Create a new token with the username in the payload
+// and which expires 300 seconds after issue
+const generateToken = (username) => {
+	const token = jwt.sign({ username }, jwtKey, {
+		algorithm: "HS256",
+		expiresIn: jwtExpirySeconds,
+	});
+
+	console.log("token:", token);
+	return token;
+};
+
 router.get('/', (req, res) => {
     res.status(500);
     res.statusMessage = 'Can\'t use this get endpoint';
@@ -27,7 +39,7 @@ router.post('/register', (req, res) => {
 	}
 
 	// Check password hash from db
-	bcrypt.hash(password, 10, function(err, hash) {
+	bcrypt.hash(password, 10, async (err, hash) => {
 		if (err)
 		{
 			console.log(err);
@@ -35,23 +47,32 @@ router.post('/register', (req, res) => {
 			res.status(500);
 		}
 		else {
-			db.get('users').insert({
-				username,
-				passwordhash: hash
-			}).then((user) => {
+			try {
+				const user = await db.get('users').insert({ username, passwordhash: hash });			
 				console.log(`New users has been inserted to mongo database: ${user.username}`);
-				return res.sendStatus(200);
-			}).catch(err => {
+
+				const token = generateToken();
+
+				// set the cookie as the token string, with a similar max age as the token
+				// here, the max age is in milliseconds, so we multiply by 1000
+				res.cookie("token", token, { maxAge: jwtExpirySeconds * 1000, path: '/' });
+				res.sendStatus(200);
+				res.end();
+			}
+			catch (err) {
 				console.log(err);				
 				res.statusMessage = 'Could not save to database.';
 				res.status(500);
-			}).then(() => db.close());
+			}
+			finally {
+				db.close();
+			}
 		}
 	});
 });
 
 router.post('/signin', (req, res) => {
-    // Get credentials from JSON body
+	// Get credentials from JSON body
 	const { username, password } = req.body;
 	if (!username || !password) {
 		// return 401 error is username or password doesn't exist, or if password does
@@ -69,13 +90,7 @@ router.post('/signin', (req, res) => {
 
 		bcrypt.compare(password, user.passwordhash, function(err, result) {
 			if (result) {
-				// Create a new token with the username in the payload
-				// and which expires 300 seconds after issue
-				const token = jwt.sign({ username }, jwtKey, {
-					algorithm: "HS256",
-					expiresIn: jwtExpirySeconds,
-				});
-				console.log("token:", token);
+				const token = generateToken(username);
 
 				// set the cookie as the token string, with a similar max age as the token
 				// here, the max age is in milliseconds, so we multiply by 1000

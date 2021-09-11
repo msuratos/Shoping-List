@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { useDispatch } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { registerThunk } from '../redux/slices/authslice';
 import './Login.css'
 
-const Register = (props) => {
+const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmpassword, setConfirmPassword] = useState('');
     const [errors, setErrors] = useState({});
-    const [redirect, setRedirect] = useState(null);
 
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const handleValidation = () => {
         let errors = {};
@@ -47,7 +47,7 @@ const Register = (props) => {
             try {
                 const resp = await dispatch(registerThunk({username: username, password: password}));
                 console.log('Registered', resp);
-                setRedirect('/');
+                history.push('/');
             }
             catch (err) {
                 console.log('Error with fetch', err);
@@ -64,11 +64,7 @@ const Register = (props) => {
     if (errors["password"])
         passworderror = <span className="login-error">{errors["password"]}</span>;
     if (errors["confirmpassword"])
-        confirmpassworderror = <span className="login-error">{errors["confirmpassword"]}</span>;   
-        
-    if (redirect) {
-        return <Redirect to={redirect} />;
-    }
+        confirmpassworderror = <span className="login-error">{errors["confirmpassword"]}</span>;
     
     return (
         <main className='login'>

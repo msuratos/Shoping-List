@@ -1,43 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, Redirect, useHistory } from "react-router-dom";
 
-import { signInThunk } from "../redux/slices/authslice";
+import { isLoggedIn, signInThunk } from "../redux/slices/authslice";
 import logoshopping from '../logo-shopping-list.svg';
 
 import './Login.css';
   
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) === ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) === 0) 
-        {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-  
-function checkCookie(cookiename) {
-    var token = getCookie(cookiename);
-    if (token !== "")
-        return true;
-    else
-        return false;
-}
-
-const Login = (props) => {
+const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
-    const [redirect, setRedirect] = useState(null);
 
     const dispatch = useDispatch();
+    const history = useHistory();
+    const isAuthenticated = useSelector(state => state.auth.isauthenticated);
 
     const handleValidation = () => {
         let errors = {};
@@ -59,12 +36,10 @@ const Login = (props) => {
 
     const onLoginButtonClick = async (events) => {
         if (handleValidation()) {
-            
-            
             try {
                 const resp = await dispatch(signInThunk({username: username, password: password}));
                 console.log('signed in', resp);
-                setRedirect('/');
+                history.push('/');
             } catch (err) {
                 console.log('Error with fetch', err)
             }
@@ -76,20 +51,14 @@ const Login = (props) => {
     const passwordChange = (event) => setPassword(event.target.value);
     const usernameChange = (event)  => setUsername(event.target.value);
 
-    useEffect(() => {        
-        if (checkCookie('token')) {
-            setRedirect('/');
-        } else {
-            console.log('not authenticated');
-        }
-    }, [props]);
+    useEffect(() => void(dispatch(isLoggedIn())), [dispatch]);
 
     let usernameerror;
     let passworderror;
 
     if (errors["username"]) usernameerror = <span className="login-error">{errors["username"]}</span>;
     if (errors["password"]) passworderror = <span className="login-error">{errors["password"]}</span>;
-    if (redirect) return <Redirect to={redirect} />;
+    if (isAuthenticated) return <Redirect to="/" />;
 
     return (
         <main className="login">
