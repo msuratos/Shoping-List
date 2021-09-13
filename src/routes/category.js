@@ -6,7 +6,8 @@ const router = express.Router();
 
 router.route('/')
     .post(async (req, res) => {
-        const { category, userid } = req.body;
+        const { category } = req.body;
+        const userid = req.userId;
         const items = db.get('items');
         const db_category = await items.find({ category: category, userid: userid });
 

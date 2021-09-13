@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Register from "./Pages/Register";
 import Login from './Pages/Login';
 import ItemList from './Pages/ItemList';
-import { PrivateRouteRedux } from './Components/PrivateRoute';
+import { PrivateRoute } from './Components/PrivateRoute';
 
 const App = () => {
   return (
@@ -16,9 +16,9 @@ const App = () => {
         <Route path="/register">
           <Register></Register>
         </Route>
-        <PrivateRouteRedux exact path="/">
+        <PrivateRoute exact path="/">
           <ItemList></ItemList>
-        </PrivateRouteRedux>
+        </PrivateRoute>
       </Switch>
     </Router>
   );

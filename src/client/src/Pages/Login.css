@@ -24,16 +24,6 @@
     background-color: teal;
 }
 
-.login-container {
-    background-color: rgb(117, 117, 117);
-    border-radius: 1rem;
-    width: 50%;
-}
-
-.login-content {
-    margin: 1rem auto;
-}
-
 .login-error {
     background-color: #ffc0bf99;
     border-radius: .2rem;
@@ -43,33 +33,15 @@
     margin: .3rem 0;
 }
 
-.login-header {
-    margin: 2rem auto;
-}
-
-.login-input {
-    border: none;
-    border-radius: .3rem;
-    height: 1.5rem;
-}
-
 .logo {
-    height: 15vmin;
+    height: 30vh;
     pointer-events: none;
 }
 
 .register-link {
+    color: #a2c7c7;
     font-size: small;
     margin: .5rem auto;
-}
-
-@media (max-width: 500px) {
-    .login-container {
-        width: 80%;
-    }
-    .logo {
-        height: 25vmin;
-    }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -80,9 +52,9 @@
 
 @keyframes app-logo-pass-through {
     from {
-        transform: translate(-150%, 0);
+        transform: translate(-125%, 0);
     }
     to {
-        transform: translate(150%, 0);
+        transform: translate(125%, 0);
     }
 }
