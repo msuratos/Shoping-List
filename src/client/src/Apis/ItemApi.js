@@ -3,10 +3,7 @@ export const GetItemsForUser = async () => {
 };
 
 export const AddCategory = async (category) => {
-  const categoryDto = {
-    category,
-    userid: 'user1'
-  };
+  const categoryDto = { category };
   const urlParams = {
     method: 'POST',
     body: JSON.stringify(categoryDto),
@@ -19,11 +16,7 @@ export const AddCategory = async (category) => {
 };
 
 export const AddItem = async (item, categoryid) => {
-  const categoryDto = {
-    categoryid: categoryid,
-    userid: 'user1',
-    item
-  };
+  const categoryDto = { categoryid: categoryid, item };
   const urlParams = {
     method: 'POST',
     body: JSON.stringify(categoryDto),

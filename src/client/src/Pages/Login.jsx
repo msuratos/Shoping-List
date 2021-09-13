@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect, useHistory } from "react-router-dom";
+import { 
+    Card, CardContent, CardHeader, CardMedia, TextField
+} from "@material-ui/core";
 
 import { isLoggedIn, signInThunk } from "../redux/slices/authslice";
 import logoshopping from '../logo-shopping-list.svg';
@@ -51,41 +54,38 @@ const Login = () => {
     const passwordChange = (event) => setPassword(event.target.value);
     const usernameChange = (event)  => setUsername(event.target.value);
 
+    const cardStyle = { margin: '1.2rem', padding: '1rem' };
+    const inputStyle = { margin: '1rem 0' };
+
     useEffect(() => void(dispatch(isLoggedIn())), [dispatch]);
-
-    let usernameerror;
-    let passworderror;
-
-    if (errors["username"]) usernameerror = <span className="login-error">{errors["username"]}</span>;
-    if (errors["password"]) passworderror = <span className="login-error">{errors["password"]}</span>;
     if (isAuthenticated) return <Redirect to="/" />;
 
     return (
-        <main className="login">
-            <img src={logoshopping} className="logo" alt="logo" />
-            <h3 className="App-h3">Shopping List</h3>
-            <div className="login-container">
-                <header className="login-header">
+        <Card style={cardStyle}>
+            <CardMedia className="logo" title="Shopping List Logo" image={logoshopping} />
+            <CardHeader title="Shopping List" />
+            <CardContent>
+                <header>
                     Welcome! Please <i>Sign in</i>
                 </header>
-                <section className="login-content">
-                    <div>
-                        <label className="label-input" htmlFor="username">Username: </label>
-                        <input className="login-input label-input" type="text" id="username" value={username} onChange={usernameChange} />
+                <section>
+                    <div style={inputStyle}>
+                        <TextField label="Username" variant="outlined" size="small" fullWidth
+                            error={errors["username"]} helperText={errors["username"]}
+                            value={username} onChange={usernameChange} />
                     </div>
-                    {usernameerror}
-                    <div>
-                        <label className="label-input" htmlFor="password">Password: </label>
-                        <input className="login-input label-input" type="password" id="password" value={password} onChange={passwordChange} />
+                    <div style={inputStyle}>
+                        <TextField label="Password" variant="outlined" size="small" fullWidth type="password"
+                            error={errors["password"]} helperText={errors["password"]}
+                            value={password} onChange={passwordChange} />
                     </div>
-                    {passworderror}
                 </section>
                 <div className='register-link'>
-                    <Link style={{color: '#c7e8e8'}} to='/register'>Don't have an account? Click here to register</Link>
+                    <Link to='/register'>Don't have an account? Click here to register</Link>
                 </div>
                 <input type="button" value="Login" className="login-button" onClick={onLoginButtonClick} />
-            </div>
-        </main>
+            </CardContent>
+        </Card>
     );
 };
 

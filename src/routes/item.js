@@ -13,7 +13,8 @@ router.route('/')
         });
     })
     .post(async (req, res) => {
-        const { userid, categoryid, item } = req.body;
+        const { categoryid, item } = req.body;
+        const userid = req.userId;
         const items = db.get('items');
 
         try {

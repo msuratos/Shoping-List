@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { 
+    Card, CardContent, CardHeader, TextField
+} from "@material-ui/core";
 
 import { registerThunk } from '../redux/slices/authslice';
 import './Login.css'
@@ -57,39 +60,34 @@ const Register = () => {
             console.log('Invalid validation from user input');
     };
 
-    let usernameerror, passworderror, confirmpassworderror;
-
-    if (errors["username"])
-        usernameerror = <span className="login-error">{errors["username"]}</span>;
-    if (errors["password"])
-        passworderror = <span className="login-error">{errors["password"]}</span>;
-    if (errors["confirmpassword"])
-        confirmpassworderror = <span className="login-error">{errors["confirmpassword"]}</span>;
+    const cardStyle = { margin: '1.2rem', padding: '1rem' };
+    const inputStyle = { margin: '1rem 0' };
     
     return (
-        <main className='login'>
-          <h3 className="App-h3">Shopping List</h3>
-            <div className="login-container">
-                <section className="login-content">
-                    <div>
-                        <label className="label-input" htmlFor="username">Username: </label>
-                        <input className="login-input label-input" type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <Card style={cardStyle}>
+          <CardHeader title="Shopping List" />
+            <CardContent>
+                <header>Register</header>
+                <section>
+                    <div style={inputStyle}>
+                        <TextField label="Username" variant="outlined" size="small" fullWidth
+                            error={errors["username"]} helperText={errors["username"]}
+                            value={username} onChange={e => setUsername(e.target.value)} />
                     </div>
-                    {usernameerror}
-                    <div>
-                        <label className="label-input" htmlFor="password">Password: </label>
-                        <input className="login-input label-input" type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <div style={inputStyle}>
+                        <TextField label="Password" variant="outlined" size="small" fullWidth type="password"
+                            error={errors["password"]} helperText={errors["password"]}
+                            value={password} onChange={e => setPassword(e.target.value)} />
                     </div>
-                    {passworderror}
-                    <div>
-                        <label className="label-input" htmlFor="confirmpassword">Confirm Password: </label>
-                        <input className="login-input label-input" type="password" id="confirmpassword" value={confirmpassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                    <div style={inputStyle}>
+                        <TextField label="Confirm Password" variant="outlined" size="small" fullWidth type="password"
+                            error={errors["confirmpassword"]} helperText={errors["confirmpassword"]}
+                            value={confirmpassword} onChange={e => setConfirmPassword(e.target.value)} />
                     </div>
-                    {confirmpassworderror}
                 </section>
                 <input type="button" value="Register" className="login-button" onClick={onRegisterClick} />
-            </div>
-        </main>
+            </CardContent>
+        </Card>
     );
 };
 
