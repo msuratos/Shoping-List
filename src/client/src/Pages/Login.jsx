@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import { 
+    Button,
     Card, CardContent, CardHeader, CardMedia, TextField
 } from "@material-ui/core";
 
 import { isLoggedIn, signInThunk } from "../redux/slices/authslice";
-import logoshopping from '../logo-shopping-list.svg';
+import { showSnackBar } from '../redux/slices/snackbarslice';
 
+import logoshopping from '../logo-shopping-list.svg';
 import './Login.css';
   
 const Login = () => {
@@ -41,6 +43,7 @@ const Login = () => {
         if (handleValidation()) {
             try {
                 const resp = await dispatch(signInThunk({username: username, password: password}));
+                dispatch(showSnackBar());
                 console.log('signed in', resp);
                 history.push('/');
             } catch (err) {
@@ -83,7 +86,7 @@ const Login = () => {
                 <div className='register-link'>
                     <Link to='/register'>Don't have an account? Click here to register</Link>
                 </div>
-                <input type="button" value="Login" className="login-button" onClick={onLoginButtonClick} />
+                <Button fullWidth variant="contained" color="primary" style={{backgroundColor: "rgb(10, 170, 170)"}} onClick={onLoginButtonClick}>Sign In</Button>
             </CardContent>
         </Card>
     );

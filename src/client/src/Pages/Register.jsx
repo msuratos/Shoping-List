@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { 
+    Button,
     Card, CardContent, CardHeader, TextField
 } from "@material-ui/core";
 
@@ -85,7 +86,9 @@ const Register = () => {
                             value={confirmpassword} onChange={e => setConfirmPassword(e.target.value)} />
                     </div>
                 </section>
-                <input type="button" value="Register" className="login-button" onClick={onRegisterClick} />
+                <Button fullWidth color="primary" variant="contained" style={{backgroundColor: "rgb(10, 170, 170)"}} onClick={onRegisterClick}>
+                    Register
+                </Button>
             </CardContent>
         </Card>
     );

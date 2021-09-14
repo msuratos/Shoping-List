@@ -35,18 +35,25 @@ const checkCookie = (cookiename) => {
 
 const authSlice = createSlice({
     name: 'authtoken',
-    initialState: { isauthenticated: false },
+    initialState: { isauthenticated: false, loading: false },
     reducers: {
         isLoggedIn: (state, action) => {
             if (checkCookie('token')) state.isauthenticated = true;
         }
      },
     extraReducers: (builder) => {
+        builder.addCase(registerThunk.pending, (state, action) => {
+            state.loading = true;
+        });
         builder.addCase(registerThunk.fulfilled, (state, action) => {
             state.isauthenticated = true;
         });
+        builder.addCase(signInThunk.pending, (state, action) => {
+            state.loading = true;
+        })
         builder.addCase(signInThunk.fulfilled, (state, action) => {
             state.isauthenticated = true;
+            state.loading = false;
         });
     }
   });
