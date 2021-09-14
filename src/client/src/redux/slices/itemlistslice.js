@@ -9,7 +9,7 @@ export const addItemThunk = createAsyncThunk('item/add/item', async (request) =>
   return await(await AddItem(request.item, request.categoryid)).json();
 });
 
-export const getItems = createAsyncThunk('items/get', async () => {
+export const getItemsThunk = createAsyncThunk('items/get', async () => {
   return await(await GetItemsForUser()).json();
 });
 
@@ -18,13 +18,22 @@ const itemlistSlice = createSlice({
     initialState: {items: [], loading: false},
     reducers: { },
     extraReducers: (builder) => {
-      builder.addCase(getItems.fulfilled, (state, action) => {
+      builder.addCase(getItemsThunk.pending, (state, action) => {
+        state.loading = true;
+      });
+      builder.addCase(getItemsThunk.fulfilled, (state, action) => {
         state.items = action.payload;
         state.loading = false;
+      });
+      builder.addCase(addCategoryThunk.pending, (state, action) => {
+        state.loading = true;
       });
       builder.addCase(addCategoryThunk.fulfilled, (state, action) => {
         state.items.push(action.payload); 
         state.loading = false;
+      });
+      builder.addCase(addItemThunk.pending, (state, action ) => {
+        state.loading = true;
       });
       builder.addCase(addItemThunk.fulfilled, (state, action) => {
         state.loading = false;

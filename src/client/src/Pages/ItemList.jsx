@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Button, Grid, TextField } from "@material-ui/core";
 
-import { addCategoryThunk, addItemThunk, getItems } from "../redux/slices/itemlistslice";
+import { addCategoryThunk, addItemThunk, getItemsThunk } from "../redux/slices/itemlistslice";
+import { showSnackBar } from "../redux/slices/snackbarslice";
 import ExpandableView from '../Components/ExpandableView';
 
 const isValidValue = (value) => {
@@ -28,6 +29,7 @@ const ItemList = () => {
             console.log('Added category', resp);
             setIsCategoryValid(true);
             setCategory('');
+            dispatch(showSnackBar());
         }
     };
 
@@ -41,13 +43,14 @@ const ItemList = () => {
                 console.log('Added item', resp);
                 setIsItemValid(true);
                 setItem('');
+                dispatch(showSnackBar());
             }
         }
     };
     
     useEffect(() => {
         const getItemsFromService = async () => {
-            const resp = await dispatch(getItems());
+            const resp = await dispatch(getItemsThunk());
             console.log('Got items for user', resp);
         };
 
@@ -62,7 +65,7 @@ const ItemList = () => {
                         value={category} onChange={(e) => setCategory(e.target.value)} />
                 </Grid>
                 <Grid item xs={4}>
-                    <Button variant="contained" color="primary" fullWidth onClick={addCategory}>Add</Button>
+                    <Button variant="contained" color="primary" fullWidth style={{backgroundColor: "rgb(10, 170, 170)"}} onClick={addCategory}>Add</Button>
                 </Grid>
                 <Grid item xs={8}>
                     <TextField error={!isItemValid} helperText={!isItemValid ? 'Can\'t be empty' : ''} label="Item" variant="outlined" size="small" fullWidth
