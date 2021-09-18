@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Backdrop, CircularProgress, Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import Register from "./Pages/Register";
-import Login from './Pages/Login';
+import Callback from "./Pages/Callback";
 import ItemList from './Pages/ItemList';
 import { PrivateRoute } from './Components/PrivateRoute';
 import { dontShowSnackBar } from "./redux/slices/snackbarslice";
@@ -27,11 +26,8 @@ const App = () => {
   return (
     <Router>
       <Switch>
-        <Route path="/signin">
-          <Login></Login>
-        </Route>
-        <Route path="/register">
-          <Register></Register>
+        <Route path="/callback">
+          <Callback />
         </Route>
         <PrivateRoute exact path="/">
           <ItemList></ItemList>

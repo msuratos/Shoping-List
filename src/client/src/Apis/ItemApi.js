@@ -1,5 +1,12 @@
+import { mgr } from "../redux/slices/authslice";
+
 export const GetItemsForUser = async () => {
-  return await fetch('api/v1/item');
+  const user = await mgr.getUser();
+  return await fetch('api/v1/item', {
+    headers: {
+      'Authorization': `Bearer ${user.access_token}`
+    }
+  });
 };
 
 export const AddCategory = async (category) => {
