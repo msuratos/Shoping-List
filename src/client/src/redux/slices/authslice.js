@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { UserManager } from "oidc-client";
 
 const config = {
-    authority: "http://localhost:5000",
+    authority: "https://localhost:5001",
     client_id: "js",
     redirect_uri: "http://localhost:3001/callback",
     response_type: "code",
