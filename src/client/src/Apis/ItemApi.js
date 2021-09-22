@@ -10,12 +10,14 @@ export const GetItemsForUser = async () => {
 };
 
 export const AddCategory = async (category) => {
+  const user = await mgr.getUser();
   const categoryDto = { category };
   const urlParams = {
     method: 'POST',
     body: JSON.stringify(categoryDto),
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.access_token}`
     }
   };
 
@@ -23,12 +25,14 @@ export const AddCategory = async (category) => {
 };
 
 export const AddItem = async (item, categoryid) => {
+  const user = await mgr.getUser();
   const categoryDto = { categoryid: categoryid, item };
   const urlParams = {
     method: 'POST',
     body: JSON.stringify(categoryDto),
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.access_token}`
     }
   };
 

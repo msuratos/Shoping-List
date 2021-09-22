@@ -1,14 +1,13 @@
 require('dotenv').config();
+const fs = require('fs');
 const https = require('https');
 const jwt = require('jsonwebtoken');
 
 const jwksClient = require('jwks-rsa');
 let client = jwksClient({
-  jwksUri: 'https://localhost:5001/.well-known/openid-configuration/jwks',
+  jwksUri: 'https://identityserver.myorg.com:5001/.well-known/openid-configuration/jwks',
   requestAgent: new https.Agent({
-    rejectUnauthorized: false //TODO: remove this once a valid cert is used instead of self-signed
-                              // this is only used because of using self-signed cert for Identity
-                              // Server local development
+    ca: fs.readFileSync('<file path>.crt')
   })
 });
 
