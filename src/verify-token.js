@@ -5,9 +5,9 @@ const jwt = require('jsonwebtoken');
 
 const jwksClient = require('jwks-rsa');
 let client = jwksClient({
-  jwksUri: 'https://identityserver.myorg.com:5001/.well-known/openid-configuration/jwks',
+  jwksUri: process.env.JWKS_URI,
   requestAgent: new https.Agent({
-    ca: fs.readFileSync('<file path>.crt')
+    ca: fs.readFileSync(process.env.CERT_PATH)
   })
 });
 
