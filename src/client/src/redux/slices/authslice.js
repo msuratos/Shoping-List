@@ -1,63 +1,35 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { register, signin } from "../../Apis/AuthApi";
+import { createSlice } from "@reduxjs/toolkit";
+import { UserManager } from "oidc-client";
 
-export const registerThunk = createAsyncThunk('auth/register', async (user) => {
-    return await(await register(user.username, user.password));
-});
+const config = {
+    authority: "https://identityserver.myorg.com:5001",
+    client_id: "js",
+    redirect_uri: "http://localhost:3001/callback",
+    response_type: "code",
+    scope:"openid profile api1",
+    post_logout_redirect_uri : "http://localhost:3001/",
+};
 
-export const signInThunk = createAsyncThunk('auth/login', async (user) => {
-    return await(await signin(user.username, user.password));
-});
-
-const getCookie = (cname) => {
-    let name = cname + "=";
-    let ca = document.cookie.split(';');
-    for(let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) === 0) 
-        {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-  
-const checkCookie = (cookiename) => {
-    const token = getCookie(cookiename);
-    if (token !== "")
-        return true;
-    else
-        return false;
-}
+export const mgr = new UserManager(config);
 
 const authSlice = createSlice({
     name: 'authtoken',
     initialState: { isauthenticated: false, loading: false },
     reducers: {
-        isLoggedIn: (state, action) => {
-            if (checkCookie('token')) state.isauthenticated = true;
+        isLoggedIn: async (state, action) => {
+            const user = await mgr.getUser();
+            if (user) state.isauthenticated = true;
+            else state.isauthenticated = false;
+        },
+        login: async (state, action) => {
+            await mgr.signinRedirect();
+        },
+        loginVerified: (state, action) => {
+            state.isauthenticated = true;
         }
-     },
-    extraReducers: (builder) => {
-        builder.addCase(registerThunk.pending, (state, action) => {
-            state.loading = true;
-        });
-        builder.addCase(registerThunk.fulfilled, (state, action) => {
-            state.isauthenticated = true;
-        });
-        builder.addCase(signInThunk.pending, (state, action) => {
-            state.loading = true;
-        })
-        builder.addCase(signInThunk.fulfilled, (state, action) => {
-            state.isauthenticated = true;
-            state.loading = false;
-        });
-    }
-  });
+     }
+});
 
 const { actions } = authSlice;
-export const { isLoggedIn } = actions;
+export const { isLoggedIn, login, loginVerified } = actions;
 export const authreducer = authSlice.reducer
